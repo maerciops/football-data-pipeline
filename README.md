@@ -62,5 +62,5 @@ pip install -r requirements.txt
 
 [ ] Modelagem dos dados com dbt para o Data Warehouse.
 
-# Desenvolvido por Maercio Paulino de Sousa
+### Desenvolvido por Maercio Paulino de Sousa
 Engenheiro de Software focando em Engenharia de Dados
