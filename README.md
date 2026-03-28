@@ -1,4 +1,4 @@
-# ⚽ Football Data Pipeline — Brasileirão 2024
+# ⚽ Football Data Pipeline — Brasileirão 2026
 
 Este projeto é uma pipeline de dados end-to-end focada em estatísticas avançadas do Campeonato Brasileiro (Série A). O objetivo é extrair, processar e visualizar métricas que vão além do placar, como **xG (Gols Sperados)**, **Passes Progressivos** e **Redes de Interação**.
 
