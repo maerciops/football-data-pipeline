@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Dados (Regra de ouro: NUNCA suba dados para o Git)
+data/
+logs/
+
+# Selenium/Drivers
+chromedriver
+geckodriver
