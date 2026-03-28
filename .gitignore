@@ -2,7 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
-venv/
+.venv/
 .env
 
 # Dados (Regra de ouro: NUNCA suba dados para o Git)
