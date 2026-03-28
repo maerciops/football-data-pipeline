@@ -54,13 +54,13 @@ pip install -r requirements.txt
 
 ## Próximos Passos
 
-# [x] Extração robusta via Selenium (Fase 1).
+[x] Extração robusta via Selenium (Fase 1).
 
-# [ ] Dockerização do ambiente e script.
+[ ] Dockerização do ambiente e script.
 
-# [ ] Orquestração das coletas semanais via Apache Airflow.
+[ ] Orquestração das coletas semanais via Apache Airflow.
 
-# [ ] Modelagem dos dados com dbt para o Data Warehouse.
+[ ] Modelagem dos dados com dbt para o Data Warehouse.
 
 # Desenvolvido por Maercio Paulino de Sousa
 Engenheiro de Software focando em Engenharia de Dados
