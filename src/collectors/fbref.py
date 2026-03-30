@@ -162,10 +162,10 @@ def get_html(path: str) -> str:
     if cache_path.exists():
         idade_segundos = time.time() - cache_path.stat().st_mtime
         if idade_segundos < 23 * 3600:
-            log.info(f"  📦 Cache válido ({int(idade_segundos/3600)}h) — {path}")
+            log.info(f"  Cache válido ({int(idade_segundos/3600)}h) — {path}")
             return cache_path.read_text(encoding="utf-8")
 
-    log.info(f"  🌐 Buscando: {url}")
+    log.info(f"  Buscando: {url}")
     driver = criar_driver()
 
     try:
@@ -178,7 +178,7 @@ def get_html(path: str) -> str:
             cloudflare_ativo = "Just a moment" in titulo or "Um momento" in titulo
 
             if not cloudflare_ativo and n_tabelas > 0:
-                log.info(f"  ✅ Carregou em {i+1}s — {n_tabelas} tabelas")
+                log.info(f"Carregou em {i+1}s — {n_tabelas} tabelas")
                 break
         else:
             raise TimeoutError(f"Página não carregou em 30s: {url}")
@@ -239,7 +239,7 @@ def limpar_df(df: pd.DataFrame) -> pd.DataFrame:
     Returns:
         DataFrame limpo e pronto para uso.
     """
-    # 1. Achata multi-level columns
+    # 1. Deixa as multi-level columns no mesmo nivel
     if isinstance(df.columns, pd.MultiIndex):
         colunas = []
         for top, bottom in df.columns:
@@ -277,15 +277,14 @@ def limpar_df(df: pd.DataFrame) -> pd.DataFrame:
 def rodar_pipeline():
     hoje = date.today().strftime("%Y-%m-%d")
     log.info(f"\n{'='*60}")
-    log.info(f"🚀 Pipeline Brasileirão — {hoje}")
+    log.info(f"Pipeline Brasileirão — {hoje}")
     log.info(f"{'='*60}\n")
 
     # ── 1. Classificação geral ────────────────────────────────
-    log.info("📥 classificacao")
+    log.info("classificacao")
     html_class = get_html(PAGINA_CLASSIFICACAO)
     tabelas_class = parse_tabelas(html_class)
 
-    # O ID da tabela de classificação muda a cada temporada (ex: results2026241_overall)
     # Busca dinamicamente pelo padrão em vez de hardcodar o ID
     id_classificacao = next(
         (k for k in tabelas_class if "overall" in k and "results" in k), None
@@ -293,16 +292,16 @@ def rodar_pipeline():
     if id_classificacao:
         df_class = limpar_df(tabelas_class[id_classificacao])
         df_class.to_parquet(OUTPUT_DIR / f"classificacao_{hoje}.parquet", index=False)
-        log.info(f"  💾 classificacao: {df_class.shape}")
+        log.info(f"  classificacao: {df_class.shape}")
     else:
-        log.warning("  ⚠️ Tabela de classificação não encontrada")
+        log.warning("  Tabela de classificação não encontrada")
 
-    # Delay entre requests — FBref exige pelo menos 3s
+    # Delay entre requests
     time.sleep(random.uniform(4, 8))
 
     # ── 2. Categorias de stats ────────────────────────────────
     for categoria, (path, id_jogadores, id_times_for, id_times_against) in PAGINAS.items():
-        log.info(f"📥 {categoria}")
+        log.info(f" {categoria}")
 
         html = get_html(path)
         tabelas = parse_tabelas(html)
@@ -313,7 +312,7 @@ def rodar_pipeline():
             df_jog.to_parquet(
                 OUTPUT_DIR / f"jogadores_{categoria}_{hoje}.parquet", index=False
             )
-            log.info(f"  💾 jogadores_{categoria}: {df_jog.shape}")
+            log.info(f"  jogadores_{categoria}: {df_jog.shape}")
         else:
             # Tenta buscar com padrão parcial (IDs podem variar)
             match = next((k for k in tabelas if id_jogadores.replace("stats_", "") in k
@@ -323,10 +322,10 @@ def rodar_pipeline():
                 df_jog.to_parquet(
                     OUTPUT_DIR / f"jogadores_{categoria}_{hoje}.parquet", index=False
                 )
-                log.info(f"  💾 jogadores_{categoria} (via fallback '{match}'): {df_jog.shape}")
+                log.info(f"  jogadores_{categoria} (via fallback '{match}'): {df_jog.shape}")
             else:
-                log.warning(f"  ⚠️ Tabela de jogadores não encontrada para {categoria}")
-                log.warning(f"     Tabelas disponíveis: {list(tabelas.keys())}")
+                log.warning(f"  Tabela de jogadores não encontrada para {categoria}")
+                log.warning(f"  Tabelas disponíveis: {list(tabelas.keys())}")
 
         # DataFrame de times — ataque (for)
         if id_times_for in tabelas:
@@ -334,9 +333,9 @@ def rodar_pipeline():
             df_for.to_parquet(
                 OUTPUT_DIR / f"times_{categoria}_ataque_{hoje}.parquet", index=False
             )
-            log.info(f"  💾 times_{categoria}_ataque: {df_for.shape}")
+            log.info(f"times_{categoria}_ataque: {df_for.shape}")
         else:
-            log.warning(f"  ⚠️ Tabela de times (ataque) não encontrada para {categoria}")
+            log.warning(f"Tabela de times (ataque) não encontrada para {categoria}")
 
         # DataFrame de times — defesa (against)
         if id_times_against in tabelas:
@@ -344,18 +343,18 @@ def rodar_pipeline():
             df_against.to_parquet(
                 OUTPUT_DIR / f"times_{categoria}_defesa_{hoje}.parquet", index=False
             )
-            log.info(f"  💾 times_{categoria}_defesa: {df_against.shape}")
+            log.info(f"times_{categoria}_defesa: {df_against.shape}")
         else:
-            log.warning(f"  ⚠️ Tabela de times (defesa) não encontrada para {categoria}")
+            log.warning(f"Tabela de times (defesa) não encontrada para {categoria}")
 
         # Delay entre páginas
         time.sleep(random.uniform(4, 8))
 
-    log.info(f"\n🏁 Pipeline concluída! Arquivos em: {OUTPUT_DIR.resolve()}")
+    log.info(f"\nPipeline concluída! Arquivos em: {OUTPUT_DIR.resolve()}")
 
     # Lista os arquivos gerados
     arquivos = sorted(OUTPUT_DIR.glob(f"*_{hoje}.parquet"))
-    log.info(f"\n📂 {len(arquivos)} arquivos gerados:")
+    log.info(f"\n{len(arquivos)} arquivos gerados:")
     for f in arquivos:
         tamanho_kb = f.stat().st_size / 1024
         log.info(f"  {f.name} ({tamanho_kb:.1f} KB)")
