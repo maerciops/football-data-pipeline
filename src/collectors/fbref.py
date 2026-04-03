@@ -1,3 +1,4 @@
+
 """
 pipeline_fbref.py
 =================
@@ -30,6 +31,24 @@ import random
 import logging
 
 # ─────────────────────────────────────────────────────────────
+# CONSTANTES E DIRETÓRIOS BLINDADOS
+# ─────────────────────────────────────────────────────────────
+BASE_URL = "https://fbref.com"
+
+# Lê a variável de ambiente do Docker. Se não achar, usa a lógica local.
+BASE_DIR = Path(os.getenv("APP_BASE_DIR", Path(__file__).resolve().parent.parent.parent))
+OUTPUT_BASE = Path(os.getenv("OUTPUT_DIR", BASE_DIR / "data"))
+
+CACHE_DIR = OUTPUT_BASE / "cache_html"
+OUTPUT_DIR = OUTPUT_BASE / "dados_brasileirao"
+LOG_DIR = BASE_DIR / "logs"
+
+# Cria as pastas ANTES de configurar o log para evitar FileNotFoundError
+CACHE_DIR.mkdir(parents=True, exist_ok=True)
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
+# ─────────────────────────────────────────────────────────────
 # CONFIGURAÇÃO DE LOG
 # ─────────────────────────────────────────────────────────────
 logging.basicConfig(
@@ -42,17 +61,6 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
-# ─────────────────────────────────────────────────────────────
-# CONSTANTES
-# ─────────────────────────────────────────────────────────────
-BASE_URL   = "https://fbref.com"
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
-CACHE_DIR = BASE_DIR / "data" / "cache_html"
-OUTPUT_DIR = BASE_DIR / "data" / "dados_brasileirao"
-
-CACHE_DIR.mkdir(exist_ok=True)
-OUTPUT_DIR.mkdir(exist_ok=True)
-Path("logs").mkdir(exist_ok=True)
 
 # Cada página do FBref tem tabelas de jogadores E times.
 # O FBref organiza assim:
@@ -121,13 +129,16 @@ PAGINA_CLASSIFICACAO = "/en/comps/24/Serie-A-Stats"
 def criar_driver() -> webdriver.Chrome:
 
     options = Options()
-    options.binary_location = "/usr/bin/chromium-browser"
+    options.binary_location = "/usr/bin/chromium" 
+    
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-blink-features=AutomationControlled")
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
     options.add_experimental_option("useAutomationExtension", False)
-    options.add_argument("--user-data-dir=/home/dev/.config/chromium")
+    
+    # Força uma resolução de tela real para o Xvfb
+    options.add_argument("--window-size=1920,1080") 
 
     return webdriver.Chrome(
         service=Service("/usr/bin/chromedriver"),
