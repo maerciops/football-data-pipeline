@@ -1,0 +1,20 @@
+services:
+  extract-data:
+    
+    build:
+      context: .
+    
+    container_name: football-data-pipeline-data-extraction
+    
+    shm_size: 2gb
+    
+    volumes:
+      - ./data:/app/data
+    
+    environment:
+      - OUTPUT_DIR=/app/data
+      - APP_BASE_DIR=/app
+      - TZ=America/Sao_Paulo
+      
+    profiles:
+      - extractor
