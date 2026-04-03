@@ -1,6 +1,14 @@
-# Football Data Pipeline — Brasileirão 
+# Football Data Pipeline — Brasileirão
 
-This project is an end-to-end data pipeline focused on advanced statistics for the Brazilian Football Championship (Série A). The main goal is to extract, process, and visualize metrics that go beyond the final score, such as **xG (Expected Goals)**, **Progressive Passes**, and **Interaction Networks**.
+**A Product-Driven Data Engineering Project.**
+
+Instead of building a "cemetery of perfectly orchestrated parquets" just to showcase modern data tools, this pipeline was reverse-engineered from the final product. The goal is to answer the real questions a football fan asks on a Monday morning after a league match.
+
+The entire data architecture (Docker, Airflow, dbt, Spark) exists solely to extract, process, and deliver reliable data to answer three core business questions:
+
+1. **Luck or Merit?** (Comparing Actual Goals vs. Expected Goals - xG).
+2. **Is a single player carrying the team?** (Analyzing individual impact metrics).
+3. **Is our squad actually superior?** (Measuring the impact of the bench/substitutes against rivals).
 
 ---
 
