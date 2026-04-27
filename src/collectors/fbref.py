@@ -17,9 +17,7 @@ Uso:
 import os
 os.environ['WDM_LOG'] = '0'  # Suprime log bugado do webdriver_manager
 
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
+import undetected_chromedriver as uc
 from bs4 import BeautifulSoup, Comment
 
 import pandas as pd
@@ -126,24 +124,20 @@ PAGINA_CLASSIFICACAO = "/en/comps/24/Serie-A-Stats"
 # ─────────────────────────────────────────────────────────────
 # SELENIUM — cria o driver do Chromium
 # ─────────────────────────────────────────────────────────────
-def criar_driver() -> webdriver.Chrome:
-
-    options = Options()
-    options.binary_location = "/usr/bin/chromium" 
+def criar_driver():
+    options = uc.ChromeOptions()
     
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--disable-blink-features=AutomationControlled")
-    options.add_experimental_option("excludeSwitches", ["enable-automation"])
-    options.add_experimental_option("useAutomationExtension", False)
+    # Com o UC, podemos voltar a usar o headless tranquilamente!
+    #options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--window-size=1920,1080')
+    options.add_argument('--disable-dev-shm-usage')
     
-    # Força uma resolução de tela real para o Xvfb
-    options.add_argument("--window-size=1920,1080") 
-
-    return webdriver.Chrome(
-        service=Service("/usr/bin/chromedriver"),
-        options=options,
-    )
+    # Inicializa o driver indetectável
+    # Ele gerencia a versão do ChromeDriver sozinho
+    driver = uc.Chrome(options=options, version_main=147)
+    
+    return driver
 
 
 # ─────────────────────────────────────────────────────────────
