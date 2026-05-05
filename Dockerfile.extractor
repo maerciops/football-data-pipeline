@@ -1,13 +1,7 @@
 FROM python:3.11-slim
 
 RUN apt-get update && apt-get install -y \
-    wget gnupg xvfb xauth unzip \
-    --no-install-recommends \
-    && mkdir -p /etc/apt/keyrings \
-    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /etc/apt/keyrings/google-chrome.gpg \
-    && sh -c 'echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' \
-    && apt-get update && apt-get install -y \
-    google-chrome-stable \
+    curl \
     --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -25,4 +19,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD ["bash", "-c", "Xvfb :99 -screen 0 1920x1080x24 & sleep 1 && export DISPLAY=:99 && python -u src/collectors/fbref.py"]
+CMD ["python", "-u", "src/collectors/fbref.py"]

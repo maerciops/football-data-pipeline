@@ -19,12 +19,13 @@ with DAG(
         api_version="auto",
         auto_remove='force',
         docker_url="unix://var/run/docker.sock", 
-        network_mode="bridge",
-        shm_size=2147483648,  # 2GB em bytes, essencial para o Chrome + Xvfb rodarem lisos
+        network_mode="football-data-pipeline_default",
+        shm_size=536870912,  #512MB
         environment={
             'TZ': 'America/Sao_Paulo',
             'OUTPUT_DIR': '/app/data',
-            'APP_BASE_DIR': '/app'
+            'APP_BASE_DIR': '/app',
+            'FLARESOLVERR_URL': 'http://flaresolverr:8191/v1',
         },
         mounts=[
             Mount(
