@@ -16,7 +16,7 @@ The entire data architecture (Docker, Airflow, dbt, Spark) exists solely to extr
 
 The project is designed with a software engineering mindset, scaling from a local script to a modern, containerized data infrastructure:
 
-* **Extraction:** Python with Selenium & BeautifulSoup (Cloudflare/Anti-bot bypass).
+* **Extraction:** Python with curl_cffi and flareresolverr(Cloudflare/Anti-bot bypass).
 * **Containerization:** Docker & Docker Compose (Isolated environments, custom images with Virtual Framebuffer for headless scraping).
 * **Storage:** Columnar **Apache Parquet** files (Schema preservation and performance).
 * **Orchestration:** Apache Airflow *(Work in Progress)*.
@@ -45,7 +45,6 @@ cd football-data-pipeline
 # Build and run the extractor container
 docker-compose --profile extractor up --build
 ```
-Note: The docker-compose.yml is explicitly configured with shm_size: 2gb to handle the heavy RAM usage of the headless Chromium browser when rendering complex statistical tables.
 
 ---
 
@@ -72,10 +71,11 @@ Note: The docker-compose.yml is explicitly configured with shm_size: 2gb to hand
 ├── /spark_jobs           # Apache Spark processing scripts
 ├── /src
 │   ├── /collectors       # Extraction logic
-│   │   └── fbref.py      # Main scraper (Selenium + BS4)
+│   │   └── fbref.py      # Main scraper (Python + curl_cffi + flareresolverr)
 │   └── /utils            # Shared utilities
 ├── /streamlit_app        # Dashboard application
-├── Dockerfile            # Custom image (Python + Chromium + Xvfb)
+├── Dockerfile.extractor  # Custom image (Python)
+├── Dockerfile.airflow    # Custom image (Airflow + PostgreSQL)
 ├── docker-compose.yml    # Services orchestration
 ├── requirements.txt      # Python dependencies
 └── .gitignore            # Ignores local data, logs, and binaries
@@ -84,9 +84,9 @@ Note: The docker-compose.yml is explicitly configured with shm_size: 2gb to hand
 
 ## Roadmap & Progress
 
-• [x] Phase 1: Robust data extraction via Selenium & Pandas.
+• [x] Phase 1: Robust data extraction via curl_cffi using flareresolverr & Pandas.
 
-• [x] Phase 2: Environment containerization (Docker, Xvfb, memory management).
+• [x] Phase 2: Environment containerization (Docker, flareresolverr, memory management).
 
 • [x] Phase 3: Automated orchestration via Apache Airflow & DockerOperator.
 
