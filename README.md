@@ -18,8 +18,8 @@ The project is designed with a software engineering mindset, scaling from a loca
 
 * **Extraction:** Python with curl_cffi and flareresolverr(Cloudflare/Anti-bot bypass).
 * **Containerization:** Docker & Docker Compose (Isolated environments, custom images with Virtual Framebuffer for headless scraping).
-* **Storage:** Columnar **Apache Parquet** files (Schema preservation and performance).
-* **Orchestration:** Apache Airflow *(Work in Progress)*.
+* **Orchestration:** Apache Airflow.
+* **Storage:** Columnar **Apache Parquet** files will be storaged at AWS S3 (Schema preservation and performance).
 * **Data Modeling:** dbt & Apache Spark *(Upcoming)*.
 * **Dashboard:** Streamlit *(Upcoming)*.
 
