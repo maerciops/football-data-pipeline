@@ -59,6 +59,7 @@ services:
       - flaresolverr
     user: root
     volumes:
+      - /home/dev/football-data-pipeline/data:/opt/airflow/football-data
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
       - /var/run/docker.sock:/var/run/docker.sock
@@ -69,6 +70,11 @@ services:
       - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=True
       - AIRFLOW__CORE__LOAD_EXAMPLES=False
       - TZ=America/Sao_Paulo
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+      - S3_BUCKET=${S3_BUCKET_NAME}
+      - S3_PREFIX=${S3_PREFIX}
     ports:
       - "8080:8080"
     command: webserver
@@ -83,6 +89,7 @@ services:
       - flaresolverr
     user: root
     volumes:
+      - /home/dev/football-data-pipeline/data:/opt/airflow/football-data
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
       - /var/run/docker.sock:/var/run/docker.sock
@@ -93,6 +100,11 @@ services:
       - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=True
       - AIRFLOW__CORE__LOAD_EXAMPLES=False
       - TZ=America/Sao_Paulo
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+      - S3_BUCKET=${S3_BUCKET_NAME}
+      - S3_PREFIX=${S3_PREFIX}
     command: scheduler
 
 volumes:
